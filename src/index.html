@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Food Api</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <img src="./photo-1493770348161-369560ae357d.avif" alt="" id="img1" />
+    <div id="main2">
+      <div id="main3">
+        <span class="icon"
+          ><h3><i class="fas fa-th fa-lg"></i></h3>
+        </span>
+        <span class="head"><h1>food API</h1></span>
+        <!-- <div id="content"></div> -->
+        <table id="food" border="1">
+          <thead>
+            <th>Food-Item-Name</th>
+            <th>Allergens</th>
+            <th>Food_group</th>
+            <th>Description</th>
+            <th>Ingredients</th>
+            <th>Serving_size</th>
+            <th>Certifications</th>
+            <th>Health_benefits</th>
+            <th>Country_of_origin</th>
+            <th>Preparation_methods</th>
+            <th>Dietary_restrictions</th>
+            <th>Brand_or_manufacturer</th>
+            <th>Nutritional_information</th>
+            <th>Action</th>
+          </thead>
+          <tbody id="tablebody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      fetch("http://localhost:3200/seedata")
+        .then((res) => res.json())
+        .then((dataArray) => {
+          console.log(dataArray);
+          const content = document.getElementById("content");
+          //
+          if (!Array.isArray(dataArray)) {
+            throw new Error("Data received is not an array");
+          }
+
+          // Loop through the array of objects and create HTML elements to display each object
+          // dataArray.forEach((data) => {
+          //   const dataElement = document.createElement("div");
+          //   dataElement.textContent = `allergens: ${data.allergens}, food_group: ${data.food_group}, description:${data.description}`;
+          //   content.appendChild(dataElement);
+          // });
+          const tablebody = document.getElementById("tablebody");
+          tablebody.innerHTML = "";
+          dataArray.forEach((food) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+            <td contenteditable="false" id="food_item_name">${food.food_item_name}</td>
+
+                    <td contenteditable="false" id="allergens">${food.allergens}</td>
+                    <td contenteditable="false" id="food_group">${food.food_group}</td>
+                    <td contenteditable="false" id="description">${food.description}</td>
+                    <td contenteditable="false" id="ingredients">${food.ingredients}</td>
+                    <td contenteditable="false" id="serving_size">${food.serving_size}</td>
+                    <td contenteditable="false" id="certifications">${food.certifications}</td>
+                     <td contenteditable="false" id="health_benefits">${food.health_benefits}</td>
+                     <td contenteditable="false" id="country_of_origin">${food.country_of_origin}</td>
+                     <td contenteditable="false" id="preparation_methods">${food.preparation_methods}</td>
+                     <td contenteditable="false" id="dietary_restrictions">${food.dietary_restrictions}</td>
+                     <td contenteditable="false" id="brand_or_manufacturer">${food.brand_or_manufacturer}</td>
+                     <td contenteditable="false" id="nutritional_information">Fat:${food.nutritional_information.fat}, Fiber:${food.nutritional_information.fiber}, Protein:${food.nutritional_information.protein},Calories:${food.nutritional_information.calories},Carbohydrates:${food.nutritional_information.carbohydrates}</td>
+                     <td> <button id="edit" onclick="editButton('${food.food_item_name}')">EDIT</button>
+                     <button id="del" onclick="deleteRow('${food.food_item_name}')">DELETE</button>
+                     <button id="save" style="display:none;" onclick="saveRow('${food.food_item_name}')">SAVE</button>
+                     </td>
+                    `;
+            tablebody.appendChild(row);
+          });
+        })
+        .catch((e) => console.log(e));
+      const editButton = async (
+        food_item_name,
+        allergens,
+        food_group,
+        description,
+        ingredients,
+        serving_size,
+        certifications,
+        health_benefits,
+        country_of_origin,
+        preparation_methods,
+        dietary_restrictions,
+        brand_or_manufacturer,
+        nutritional_information
+      ) => {
+        document.getElementById("save").style.display = "block";
+        document.getElementById("edit").style.display = "none";
+
+        const f = document.getElementById("food_item_name").innerText;
+        const a = document.getElementById("allergens").innerText;
+        const g = document.getElementById("food_group").innerText;
+        const d = document.getElementById("description").innerText;
+        const i = document.getElementById("ingredients").innerText;
+        const s = document.getElementById("serving_size").innerText;
+        const c = document.getElementById("certifications").innerText;
+        const h = document.getElementById("health_benefits").innerText;
+        const o = document.getElementById("country_of_origin").innerText;
+        const p = document.getElementById("preparation_methods").innerText;
+        const r = document.getElementById("dietary_restrictions").innerText;
+        const b = document.getElementById("brand_or_manufacturer").innerText;
+        const n = document.getElementById("nutritional_information").innerText;
+
+        document.getElementById(
+          "food_item_name"
+        ).innerHTML = `<label for="foodName">Pls Enter:</label>
+                    <input type="text" id="foodName" value="${food_item_name}"><br>`;
+        document.getElementById(
+          "allergens"
+        ).innerHTML = `<label for="allergy">Pls Enter:</label>
+                    <input type="text" id="allergy" value="${allergens}"><br>`;
+
+        document.getElementById(
+          "food_group"
+        ).innerHTML = `<label for="foodgroup">Pls Enter:</label>
+                    <input type="text" id="foodgroup" value="${food_group}"><br>`;
+
+        document.getElementById(
+          "description"
+        ).innerHTML = `<label for="desp">Pls Enter:</label>
+                    <input type="text" id="desp" value="${description}"><br>`;
+        document.getElementById(
+          "ingredients"
+        ).innerHTML = `<label for="ingredient">Pls Enter:</label>
+                    <input type="text" id="ingredient" value="${ingredients}"><br>`;
+        document.getElementById(
+          "serving_size"
+        ).innerHTML = `<label for="serving">Pls Enter:</label>
+                    <input type="text" id="serving" value="${serving_size}"><br>`;
+        document.getElementById(
+          "certifications"
+        ).innerHTML = `<label for="certification">Pls Enter:</label>
+                    <input type="text" id="certification" value="${certifications}"><br>`;
+        document.getElementById(
+          "health_benefits"
+        ).innerHTML = `<label for="health">Pls Enter:</label>
+                    <input type="text" id="health" value="${health_benefits}"><br>`;
+        document.getElementById(
+          "country_of_origin"
+        ).innerHTML = `<label for="origin">Pls Enter:</label>
+                    <input type="text" id="origin" value="${country_of_origin}"><br>`;
+        document.getElementById(
+          "preparation_methods"
+        ).innerHTML = `<label for="preparation">Pls Enter:</label>
+                    <input type="text" id="preparation" value="${preparation_methods}"><br>`;
+        document.getElementById(
+          "dietary_restrictions"
+        ).innerHTML = `<label for="restrictions">Pls Enter:</label>
+                    <input type="text" id="restrictions" value="${dietary_restrictions}"><br>`;
+        document.getElementById(
+          "brand_or_manufacturer"
+        ).innerHTML = `<label for="brand">Pls Enter:</label>
+                    <input type="text" id="brand" value="${brand_or_manufacturer}"><br>`;
+        document.getElementById(
+          "nutritional_information"
+        ).innerHTML = `<label for="nutritional">Pls Enter:</label>
+                    <input type="text" id="nutritional" value="${nutritional_information}"><br>`;
+
+        document.getElementById("foodName").value = f;
+        document.getElementById("allergy").value = a;
+        document.getElementById("foodgroup").value = g;
+        document.getElementById("desp").value = d;
+        document.getElementById("ingredient").value = i;
+        document.getElementById("serving").value = s;
+        document.getElementById("certification").value = c;
+        document.getElementById("health").value = h;
+        document.getElementById("origin").value = o;
+        document.getElementById("preparation").value = p;
+        document.getElementById("restrictions").value = r;
+        document.getElementById("brand").value = b;
+        document.getElementById("nutritional").value = n;
+      };
+
+      const saveRow = async (
+        food_item_name,
+        allergens,
+        food_group,
+        description,
+        ingredients,
+        serving_size,
+        certifications,
+        health_benefits,
+        country_of_origin,
+        preparation_methods,
+        dietary_restrictions,
+        brand_or_manufacturer,
+        nutritional_information
+      ) => {
+        const newFood = document.getElementById("foodName").value;
+        const newAllergy = document.getElementById("allergy").value;
+       const newG =document.getElementById("foodgroup").value ;
+       const newD =document.getElementById("desp").value ;
+       const newI =document.getElementById("ingredient").value ;
+       const newS =document.getElementById("serving").value ;
+       const newC =document.getElementById("certification").value ;
+       const newh =document.getElementById("health").value ;
+       const newO =document.getElementById("origin").value ;
+       const newP =document.getElementById("preparation").value ;
+       const newR =document.getElementById("restrictions").value ;
+       const newB =document.getElementById("brand").value ;
+       const newN =document.getElementById("nutritional").value ;
+        const updated = {
+        food_item_name: newFood,
+        allergens: newAllergy,
+        food_group:newG,
+        description:newD,
+        ingredients:newI,
+        serving_size:newS,
+        certifications:newC,
+        health_benefits:newh,
+        country_of_origin:newO,
+        preparation_methods:newP,
+        dietary_restrictions:newR,
+        brand_or_manufacturer:newB,
+        nutritional_information:newN
+        };
+        try {
+          const response = await fetch(
+            `http://localhost:3200/foodModel/${food_item_name}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updated),
+            }
+          );
+        } catch (e) {
+          console.log(e);
+        }
+        location.reload();
+        console.log("clicked", updated);
+      };
+
+      const deleteRow = async (food_item_name) => {
+        try {
+          const response = await fetch(
+            `http://localhost:3200/foodModel/${food_item_name}`,
+            {
+              method: "DELETE",
+            }
+          );
+          const data = await response.json(); //id
+          //refresh
+          location.reload();
+          console.log(response, "res");
+        } catch (e) {
+          console.log(e);
+        }
+      };
+    </script>
+  </body>
+</html>
